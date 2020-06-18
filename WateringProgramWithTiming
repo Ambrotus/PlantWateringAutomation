@@ -87,7 +87,7 @@ void loop() {
     digitalWrite(waterBuzzer, LOW);
   } else {
     for (int i = 0; i < NumberOfPlants; i++) {
-      if (soilWaterLevels[i] > 400) { //1000 is dry, 200 is in water
+      if (soilWaterLevels[i] > 700) { //1000 is dry, 200 is in water
         digitalWrite(powerPumpRelay[i], HIGH); //{13,11,10,9};
         delay(WATER_DELAY); //5sec
         timerAdjustment += WATER_DELAY;
