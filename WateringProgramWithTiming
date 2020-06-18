@@ -50,21 +50,27 @@ void loop() {
   for (int i = 0; i < NumberOfPlants; i++) {
     digitalWrite(soilSamplerPowerSlot[i], HIGH);
     delay(SENSOR_DELAY);
+    timerAdjustment+=SENSOR_DELAY;
     soilWaterLevels[i] = analogRead(soilSamplerSection1);
     Serial.println(analogRead(soilSamplerSection1));
     digitalWrite(soilSamplerPowerSlot[i], LOW);
     delay(SENSOR_DELAY);
+    timerAdjustment+=SENSOR_DELAY;
   }//2hours 3 min in stream
 
   // Clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
+  timerAdjustment+= 0.002;// shouldnt matter as an int will trunc it
+  
   // Sets the trigPin on HIGH state for 10 micro seconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
+  timerAdjustment+=0.01; //shouldnt matter as an int will trunc it
   digitalWrite(trigPin, LOW);
   // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin, HIGH);
+  timerAdjustment+= (duration/1000);//will only matter if its bigger than 1ms will trunc decimal
   Serial.print("duration: ");
   Serial.println(duration);
   // Calculating the distance
@@ -77,6 +83,7 @@ void loop() {
   if (distance > 10) { //min water level, meaning only 2ish cm of water left
     digitalWrite(waterBuzzer, HIGH);
     delay(2000);
+    timerAdjustment+=2000;
     digitalWrite(waterBuzzer, LOW);
   } else {
     for (int i = 0; i < NumberOfPlants; i++) {
@@ -90,7 +97,7 @@ void loop() {
       }
     }
   }
-  delay(HOUR_DELAY - timerAdjustment); //started 2:36 am
+  delay(HOUR_DELAY - timerAdjustment); //started a few sec before 2:49 am
   //delay(2000);//tester
 }
 //***************************NOTES***************************
